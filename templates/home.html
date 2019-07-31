@@ -1,0 +1,13 @@
+<html>
+<head>
+	<title>Flight Deals</title>
+</head>
+<body>
+	<h1>Flight Deals from San Francsico</h1>
+	{% for article in articles %}
+	<b><a href="{{article.link}}">{{article.title}}</a></b><br />
+	<i>{{article.published}}</i><br />
+	{{article.summary|safe}}
+	<hr />
+	{% endfor %}</body>
+</html>
