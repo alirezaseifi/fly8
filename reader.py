@@ -68,7 +68,7 @@ def get_news():
     for feed in feeds:
         entries.extend( feed[ "items" ] )
 
-    username = 'cheap.flight.deals'
+    username = 'flyfordeals'
     password = 'M136911m'
     cookie_file = 'COOKIE_FOR_USER.json' # default: `USERNAME_ig.json`
     with client(username, password) as cli:
@@ -89,11 +89,12 @@ def get_news():
                         # get string cookies
                         cookies = cli.get_cookie()
                         pattern = r'\-*(\d+)x(\d+)\.(.*)$'
-                        replacement = r'.\3';
+                        replacement = r'.\3'
                         no_ratio_image_url = re.sub(pattern, replacement, entry['media_content'][0]['url'])
                         print(no_ratio_image_url)
                         try:
-                            cli.upload(no_ratio_image_url, entry["title"])
+                            cli.upload(no_ratio_image_url, entry["title"], story=True)
+                            cli.upload(no_ratio_image_url, entry["title"] + ' #SFO #flycheap #cheapflights #sanfrancisco #oakland #flyeconomy')
                         except IOError:
                             pass
                 deal = Deal(entry["id"], entry["title"], entry["summary"], entry["link"], datetime.fromtimestamp(mktime(entry["published_parsed"])))
