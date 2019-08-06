@@ -69,8 +69,8 @@ def deals ():
 
 def get_news():
     # pull down all feeds
-    query = request.args.get('from')
-    future_calls = [Future(feedparser.parse,rss_url) for rss_url in rss_feeds(query)]
+    departure_city = request.args.get('from')
+    future_calls = [Future(feedparser.parse,rss_url) for rss_url in rss_feeds(departure_city)]
     # block until they are all in
     feeds = [future_obj() for future_obj in future_calls]
 
@@ -112,7 +112,7 @@ def get_news():
     sorted_entries = sorted(entries,reverse=True, key=lambda entry: entry["published_parsed"])
     # print(sorted_entries) # for most recent entries firsts
 
-    return render_template("home.html", articles=sorted_entries)
+    return render_template("home.html", articles=sorted_entries, departure_city=departure_city)
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

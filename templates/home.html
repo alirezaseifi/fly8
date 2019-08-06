@@ -3,7 +3,7 @@
 	<title>Flight Deals</title>
 </head>
 <body>
-	<h1>Flight Deals from San Francsico</h1>
+	<h1>Flight Deals from {{departure_city}}</h1>
 	{% for article in articles %}
 	<b><a href="{{article.link}}">{{article.title}}</a></b><br />
 	<i>{{article.published}}</i><br />
