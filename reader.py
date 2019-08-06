@@ -79,7 +79,6 @@ def get_news():
         entries.extend( feed[ "items" ] )
 
     username = 'flyfordeals'
-    password = 'M136911m'
     cookie_file = 'COOKIE_FOR_USER.json' # default: `USERNAME_ig.json`
     with client(username, password) as cli:
         for entry in entries:
