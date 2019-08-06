@@ -32,8 +32,6 @@ heading = "Scraping Flight deals"
 # }
 
 def rss_feeds(departure_city):
-    if departure_city is None:
-        departure_city = 'san francisco'
     return {
         "https://www.secretflying.com/posts/category/{0}/feed/".format(departure_city.replace(" ", "-")),
         "https://www.fly4free.com/flights/flight-deals/usa/feed?s={0}".format(departure_city.replace(" ", "+")),
@@ -70,6 +68,8 @@ def deals ():
 def get_news():
     # pull down all feeds
     departure_city = request.args.get('from')
+    if departure_city is None:
+        departure_city = 'san francisco'
     future_calls = [Future(feedparser.parse,rss_url) for rss_url in rss_feeds(departure_city)]
     # block until they are all in
     feeds = [future_obj() for future_obj in future_calls]
@@ -79,8 +79,10 @@ def get_news():
         entries.extend( feed[ "items" ] )
 
     username = 'flyfordeals'
-    cookie_file = 'COOKIE_FOR_USER.json' # default: `USERNAME_ig.json`
-    with client(username, password) as cli:
+    password = 'M136911m'
+    cookie_file = 'flyfordeals.json' # default: `USERNAME_ig.json`
+    with client(username, password, cookie_file=cookie_file) as cli:
+
         for entry in entries:
             if Deal.query.filter_by(guid= entry["id"]).first():
                 # if 'media_content' in entry:
@@ -94,7 +96,6 @@ def get_news():
                 continue
             else:
                 if 'media_content' in entry:
-                        print(entry['media_content'][0]['url'])
                         # get string cookies
                         cookies = cli.get_cookie()
                         pattern = r'\-*(\d+)x(\d+)\.(.*)$'
@@ -112,7 +113,7 @@ def get_news():
     sorted_entries = sorted(entries,reverse=True, key=lambda entry: entry["published_parsed"])
     # print(sorted_entries) # for most recent entries firsts
 
-    return render_template("home.html", articles=sorted_entries, departure_city=departure_city)
+    return render_template("home.html", articles=sorted_entries, departure_city=departure_city.title())
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
