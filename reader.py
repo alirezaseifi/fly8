@@ -23,13 +23,22 @@ db.create_all()
 title = "Scraping Flight deals"
 heading = "Scraping Flight deals"
 
-RSS_FEEDS = {
-    'https://www.secretflying.com/posts/category/san-francisco/feed/',
-    'https://www.secretflying.com/posts/category/oakland/feed/',
-    # 'http://www.theflightdeal.com/category/flight-deals/SFO/feed/',
-    'https://www.fly4free.com/flights/flight-deals/usa/feed?s=san+francisco',
-    'https://airfarespot.com/category/north-america/san-francisco/feed/',
-}
+# RSS_FEEDS = {
+#     'https://www.secretflying.com/posts/category/san-francisco/feed/',
+#     'https://www.secretflying.com/posts/category/oakland/feed/',
+#     # 'http://www.theflightdeal.com/category/flight-deals/SFO/feed/',
+#     'https://www.fly4free.com/flights/flight-deals/usa/feed?s=san+francisco',
+#     'https://airfarespot.com/category/north-america/san-francisco/feed/',
+# }
+
+def rss_feeds(departure_city):
+    if departure_city is None:
+        departure_city = 'san francisco'
+    return {
+        "https://www.secretflying.com/posts/category/{0}/feed/".format(departure_city.replace(" ", "-")),
+        "https://www.fly4free.com/flights/flight-deals/usa/feed?s={0}".format(departure_city.replace(" ", "+")),
+        "https://airfarespot.com/category/north-america/{0}/feed/".format(departure_city.replace(" ", "-")),
+    }
 
 @app.route("/", methods=['GET', 'POST'])
 def default():
@@ -60,7 +69,8 @@ def deals ():
 
 def get_news():
     # pull down all feeds
-    future_calls = [Future(feedparser.parse,rss_url) for rss_url in RSS_FEEDS]
+    query = request.args.get('from')
+    future_calls = [Future(feedparser.parse,rss_url) for rss_url in rss_feeds(query)]
     # block until they are all in
     feeds = [future_obj() for future_obj in future_calls]
 
