@@ -5,9 +5,9 @@
 <body>
 	<h1>Flight Deals from {{departure_city}}</h1>
 	{% for article in articles %}
-	<b><a href="{{article.link}}">{{article.title}}</a></b><br />
+	<b><a href="/detail/{{article.id | base64_encode}}">{{article.title}}</a></b><br />
 	<i>{{article.published}}</i><br />
-	{{article.summary|safe}}
+	{{article.description|safe}}
 	<hr />
 	{% endfor %}</body>
 </html>

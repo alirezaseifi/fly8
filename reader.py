@@ -2,6 +2,7 @@ import feedparser
 from datetime import datetime
 from flask import Flask, request, Response, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 from models import *
 from config import Config
 
@@ -13,6 +14,9 @@ from time import mktime
 from sqlalchemy.exc import IntegrityError
 from instapy_cli import client
 import re
+from bs4 import BeautifulSoup
+import requests
+import base64
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -38,9 +42,51 @@ def rss_feeds(departure_city):
         "https://airfarespot.com/category/north-america/{0}/feed/".format(departure_city.replace(" ", "-")),
     }
 
+KEY = 'BOOOOOOOOObabaKiramdahanet'
+def encode(key, clear):
+    enc = []
+    for i in range(len(clear)):
+        key_c = key[i % len(key)]
+        enc_c = chr((ord(clear[i]) + ord(key_c)) % 256)
+        enc.append(enc_c)
+    return base64.urlsafe_b64encode("".join(enc).encode()).decode()
+
+def decode(key, enc):
+    dec = []
+    enc = base64.urlsafe_b64decode(enc).decode()
+    for i in range(len(enc)):
+        key_c = key[i % len(key)]
+        dec_c = chr((256 + ord(enc[i]) - ord(key_c)) % 256)
+        dec.append(dec_c)
+    return "".join(dec)
+
+
+@app.template_filter()
+def base64_encode(guid):
+    return encode(KEY, guid)
+
+
 @app.route("/", methods=['GET', 'POST'])
 def default():
     return get_news()
+
+
+# @app.route("/scrape")
+def scrape(guid):
+    booking_websites = ["momondo","priceline","skyscanner","google.com/flights/","kiwi"]
+    # start_urls = [r.url for r in Deal.query.filter_by(parsed_url=None).order_by(desc(Deal.created_at)).limit(2)]
+    response  = requests.get(guid)
+    data = response.text
+    soup = BeautifulSoup(data)
+    a_tag = []
+    for link in soup.find_all('a'):
+        if link.get('href') and any(booking_website in link.get('href') for booking_website in booking_websites):
+            a_tag.append(str(link))
+            # detail = Detail(deal.id,link.get('href'), link.contents[0],link)
+            # db.session.add(detail)
+            # db.session.commit()
+            #print(link.get('href'))
+    return a_tag
 
 @app.route("/fetch")
 def lists ():
@@ -56,6 +102,19 @@ def deals ():
     # for deal in deals:
     #     print(deal)
     return render_template("list.html", deals = deals)
+
+
+@app.route("/detail/<deal_id>")
+def detail(deal_id):
+    #Display the all Tasks
+    guid = decode(KEY, deal_id)
+    deal = Deal.query.filter_by(guid= str(guid)).first()
+    # details = Detail.query.filter_by(deal_id= deal_id).all()
+    # # booking_urls = BookingLink.squery.order_by(BookingLink.created_at.desc()).all()
+    # # for deal in deals:
+    # #     print(deal)
+    # print(details)
+    return render_template("detail.html", links= scrape(guid), deal= deal)
 
 # @app.route("/wired")
 # def wired():
@@ -78,30 +137,20 @@ def get_news():
     for feed in feeds:
         entries.extend( feed[ "items" ] )
 
-    username = 'flyfordeals'
-    password = 'M136911m'
-    cookie_file = 'flyfordeals.json' # default: `USERNAME_ig.json`
-    with client(username, password, cookie_file=cookie_file) as cli:
 
-        for entry in entries:
+    for entry in entries:
             if Deal.query.filter_by(guid= entry["id"]).first():
-                # if 'media_content' in entry:
-                #     pattern = r'\-*(\d+)x(\d+)\.(.*)$'
-                #     replacement = r'.\3';
-                #     no_ratio_image_url = re.sub(pattern, replacement, entry['media_content'][0]['url'])
-                #     try:
-                #         cli.upload(no_ratio_image_url, story=True)
-                #     except IOError:
-                #         pass
                 continue
             else:
                 if 'media_content' in entry:
-                        # get string cookies
+                    username = 'flyfordeals'
+                    password = 'M136911m'
+                    cookie_file = 'flyfordeals.json' # default: `USERNAME_ig.json`
+                    with client(username, password, cookie_file=cookie_file) as cli:
                         cookies = cli.get_cookie()
                         pattern = r'\-*(\d+)x(\d+)\.(.*)$'
                         replacement = r'.\3'
                         no_ratio_image_url = re.sub(pattern, replacement, entry['media_content'][0]['url'])
-                        print(no_ratio_image_url)
                         try:
                             cli.upload(no_ratio_image_url, entry["title"], story=True)
                             cli.upload(no_ratio_image_url, entry["title"] + ' #SFO #flycheap #cheapflights #sanfrancisco #oakland #flyeconomy')

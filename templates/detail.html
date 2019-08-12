@@ -1,0 +1,11 @@
+<html>
+<head>
+	<title>{{deal.title}}</title>
+</head>
+<body>
+	<h1>{{deal.title}}</h1>
+	{% for link in links %}
+		{{link | safe}}
+		<hr />
+	{% endfor %}</body>
+</html>

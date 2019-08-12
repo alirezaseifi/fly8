@@ -23,7 +23,8 @@ class Deal(db.Model):
     to = db.Column(db.String)
     alliance = db.Column(db.String)
     airline = db.Column(db.String)
-    instagram = db.Column(db.String)
+    instagram = db.Column(db.Boolean)
+    scraped = db.Column(db.Boolean)
     source = db.Column(db.String)
     created_at = db.Column(db.DateTime)
 
@@ -49,9 +50,11 @@ class Detail(db.Model):
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime)
 
-    def __init__(self, deal_id, a_tag):
+    def __init__(self, deal_id, url, url_text, a_tag):
         self.deal_id= deal_id
-        self.a_tag = a_tag
+        self.url = str(url)
+        self.url_text = str(url_text)
+        self.a_tag = str(a_tag)
         self.created_at = datetime.utcnow()
 
     def __repr__(self):
