@@ -3,6 +3,17 @@
 	<title>Flight Deals</title>
 </head>
 <body>
+
+	Departure City: <input type='text' placeholder="San Francisco" id='from'>
+	 <button onclick="sendUrl();">Search</button>
+
+
+	<script>
+	    function sendUrl(){
+	        window.location.assign("?from="+document.getElementById("from").value);
+	    }
+	</script>
+
 	<h1>Flight Deals from {{departure_city}}</h1>
 	{% for article in articles %}
 	<b><a href="/detail/{{article.id | base64_encode}}">{{article.title}}</a></b><br />
