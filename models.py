@@ -38,16 +38,21 @@ class Deal(db.Model):
     def __repr__(self):
         return '<Deal Guid %r>' % (self.guid)
 
-class BookingLink(db.Model):
+class Detail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     deal_id = db.Column(db.Integer, db.ForeignKey(id))
-    parsed_url = db.Column(db.String)
+    url = db.Column(db.String)
+    url_text = db.Column(db.String)
+    departure_on = db.Column(db.String)
+    return_on = db.Column(db.String)
+    a_tag = db.Column(db.Text)
+    description = db.Column(db.Text)
     created_at = db.Column(db.DateTime)
 
-    def __init__(self, deal_id, parsed_url):
+    def __init__(self, deal_id, a_tag):
         self.deal_id= deal_id
-        self.parsed_url = parsed_url
+        self.a_tag = a_tag
         self.created_at = datetime.utcnow()
 
     def __repr__(self):
-        return '<Deal id %r>' % (self.id)
+        return '<Deal id %r>' % (self.deal_id)
