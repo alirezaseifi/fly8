@@ -66,6 +66,13 @@ def base64_encode(guid):
     return encode(KEY, guid)
 
 
+@app.template_filter()
+def remove_hrefs(text):
+    soup = BeautifulSoup(text)
+    for a in soup.findAll('a'):
+        del a['href']
+    return soup
+
 @app.route("/", methods=['GET', 'POST'])
 def default():
     return get_news()

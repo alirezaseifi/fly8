@@ -18,7 +18,7 @@
 	{% for article in articles %}
 	<b><a href="/detail/{{article.id | base64_encode}}">{{article.title}}</a></b><br />
 	<i>{{article.published}}</i><br />
-	{{article.description|safe}}
+	{{article.description|remove_hrefs|safe}}
 	<hr />
 	{% endfor %}</body>
 </html>
