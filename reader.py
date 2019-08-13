@@ -139,9 +139,7 @@ def get_news():
 
 
     for entry in entries:
-        if Deal.query.filter_by(guid= entry["id"]).first():
-            continue
-        else:
+        if Deal.query.filter_by(guid= entry["id"]).count() < 1:
             if 'media_content' in entry:
                 username = 'flyfordeals'
                 password = 'M136911m'
