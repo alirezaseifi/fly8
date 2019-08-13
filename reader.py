@@ -147,20 +147,20 @@ def get_news():
 
     for entry in entries:
         if Deal.query.filter_by(guid= entry["id"]).count() < 1:
-            if 'media_content' in entry:
-                username = 'flyfordeals'
-                password = 'M136911m'
-                cookie_file = 'flyfordeals.json' # default: `USERNAME_ig.json`
-                with client(username, password, cookie_file=cookie_file) as cli:
-                    cookies = cli.get_cookie()
-                    pattern = r'\-*(\d+)x(\d+)\.(.*)$'
-                    replacement = r'.\3'
-                    no_ratio_image_url = re.sub(pattern, replacement, entry['media_content'][0]['url'])
-                    try:
-                        cli.upload(no_ratio_image_url, entry["title"], story=True)
-                        cli.upload(no_ratio_image_url, entry["title"] + ' #SFO #flycheap #cheapflights #sanfrancisco #oakland #flyeconomy')
-                    except IOError:
-                        pass
+            # if 'media_content' in entry:
+            #     username = 'flyfordeals'
+            #     password = 'M136911m'
+            #     cookie_file = 'flyfordeals.json' # default: `USERNAME_ig.json`
+            #     with client(username, password, cookie_file=cookie_file) as cli:
+            #         cookies = cli.get_cookie()
+            #         pattern = r'\-*(\d+)x(\d+)\.(.*)$'
+            #         replacement = r'.\3'
+            #         no_ratio_image_url = re.sub(pattern, replacement, entry['media_content'][0]['url'])
+            #         try:
+            #             cli.upload(no_ratio_image_url, entry["title"], story=True)
+            #             cli.upload(no_ratio_image_url, entry["title"] + ' #SFO #flycheap #cheapflights #sanfrancisco #oakland #flyeconomy')
+            #         except IOError:
+            #             pass
             deal = Deal(entry["id"], entry["title"], entry["summary"], entry["link"], datetime.fromtimestamp(mktime(entry["published_parsed"])))
             db.session.add(deal)
             db.session.commit()
