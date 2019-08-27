@@ -22,10 +22,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(Config)
 db = SQLAlchemy(app)
-db.create_all()
-
-title = "Scraping Flight deals"
-heading = "Scraping Flight deals"
+# db.create_all()
 
 # RSS_FEEDS = {
 #     'https://www.secretflying.com/posts/category/san-francisco/feed/',
@@ -80,7 +77,7 @@ def default():
 
 # @app.route("/scrape")
 def scrape(guid):
-    booking_websites = ["momondo","priceline","skyscanner","google.com/flights/","kiwi"]
+    booking_websites = ["momondo","priceline","skyscanner","google.com/flights/","kiwi",'cheapoair','jetblue.com','southwest.com','alaskaair.com',]
     # start_urls = [r.url for r in Deal.query.filter_by(parsed_url=None).order_by(desc(Deal.created_at)).limit(2)]
     response  = requests.get(guid)
     data = response.text
@@ -99,7 +96,7 @@ def scrape(guid):
 def lists ():
     #Display the all Tasks
     os.system("scrapy crawl booking_crawler > booking_urls.csv")
-    return title
+    return 'ok'
 
 @app.route("/list")
 def deals ():

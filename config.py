@@ -3,6 +3,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
+    REDIS_URL = os.environ.get('REDIS_URL') or 'redis://'
     TESTING = False
     CSRF_ENABLED = True
     SQLALCHEMY_ECHO = False
@@ -13,6 +14,7 @@ class Config(object):
 
 class ProductionConfig(Config):
     DEBUG = False
+    REDIS_URL = os.environ.get('REDIS_URL') or 'redis://'
 
 
 class StagingConfig(Config):
