@@ -84,7 +84,7 @@ def post_to_insta(entry):
         no_ratio_image_url = re.sub(pattern, replacement, entry['media_content'][0]['url'])
         try:
             cli.upload(no_ratio_image_url, entry["title"], story=True)
-            cli.upload(no_ratio_image_url, entry["title"] + ' #SFO #flycheap #cheapflights #sanfrancisco #oakland #flyeconomy')
+            cli.upload(no_ratio_image_url, entry["title"] + ' #{0} #flycheap #cheapflights #flyfordeals #flycheap #flymoreforless #vacation'.format(departure_city.replace(" ", "")))
         except IOError:
             pass
 
