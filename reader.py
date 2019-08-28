@@ -46,10 +46,14 @@ celery.conf.update(app.config)
 # }
 
 def rss_feeds(departure_city):
+    # geoname = requests.get('http://api.geonames.org/searchJSON?username=ksuhiyp&country=us&q=san francisco&maxRows=1')
+    # if geoname.status_code == 200:
+    #     geoname_id = geoname.json()['geonames'][0]['geonameId']
     return {
         "https://www.secretflying.com/posts/category/{0}/feed/".format(departure_city.replace(" ", "-")),
         "https://www.fly4free.com/flights/flight-deals/usa/feed?s={0}".format(departure_city.replace(" ", "+")),
         "https://airfarespot.com/category/north-america/{0}/feed/".format(departure_city.replace(" ", "-")),
+        # "https://www.travelpirates.com/feed?filter[origin]={0}".format(geoname_id)
     }
 
 KEY = 'BOOOOOOOOObabaKiramdahanet'
@@ -107,7 +111,7 @@ def default():
 
 # @app.route("/scrape")
 def scrape(guid):
-    booking_websites = ["momondo","priceline","skyscanner","google.com/flights/","kiwi",'cheapoair','jetblue.com','southwest.com','alaskaair.com',]
+    booking_websites = ["momondo","priceline","skyscanner","google.com/flights/","kiwi",'cheapoair','jetblue.com','southwest.com','alaskaair.com','expedia']
     # start_urls = [r.url for r in Deal.query.filter_by(parsed_url=None).order_by(desc(Deal.created_at)).limit(2)]
     response  = requests.get(guid)
     data = response.text
