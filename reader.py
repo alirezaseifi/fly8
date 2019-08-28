@@ -13,15 +13,28 @@ import time
 from time import mktime
 from sqlalchemy.exc import IntegrityError
 from instapy_cli import client
+from celery import Celery
 import re
 from bs4 import BeautifulSoup
 import requests
 import base64
 
+
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
+app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+app.config['CELERY_IGNORE_RESULT'] = False
+
+# This line is what I needed
+app.config['CELERY_TRACK_STARTED'] = True
+
+
+celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
 # db.create_all()
 
 # RSS_FEEDS = {
@@ -57,6 +70,23 @@ def decode(key, enc):
         dec.append(dec_c)
     return "".join(dec)
 
+
+@celery.task
+def post_to_insta(entry):
+    # some long running task here
+    username = 'flyfordeals'
+    password = 'M136911m'
+    pattern = r'\-*(\d+)x(\d+)\.(.*)$'
+    replacement = r'.\3'
+    print(entry)
+    cookie_file = 'flyfordeals.json' # default: `USERNAME_ig.json`
+    with client(username, password, cookie_file=cookie_file) as cli:
+        no_ratio_image_url = re.sub(pattern, replacement, entry['media_content'][0]['url'])
+        try:
+            cli.upload(no_ratio_image_url, entry["title"], story=True)
+            cli.upload(no_ratio_image_url, entry["title"] + ' #SFO #flycheap #cheapflights #sanfrancisco #oakland #flyeconomy')
+        except IOError:
+            pass
 
 @app.template_filter()
 def base64_encode(guid):
@@ -144,20 +174,8 @@ def get_news():
 
     for entry in entries:
         if Deal.query.filter_by(guid= entry["id"]).count() < 1:
-            # if 'media_content' in entry:
-            #     username = 'flyfordeals'
-            #     password = 'M136911m'
-            #     cookie_file = 'flyfordeals.json' # default: `USERNAME_ig.json`
-            #     with client(username, password, cookie_file=cookie_file) as cli:
-            #         cookies = cli.get_cookie()
-            #         pattern = r'\-*(\d+)x(\d+)\.(.*)$'
-            #         replacement = r'.\3'
-            #         no_ratio_image_url = re.sub(pattern, replacement, entry['media_content'][0]['url'])
-            #         try:
-            #             cli.upload(no_ratio_image_url, entry["title"], story=True)
-            #             cli.upload(no_ratio_image_url, entry["title"] + ' #SFO #flycheap #cheapflights #sanfrancisco #oakland #flyeconomy')
-            #         except IOError:
-            #             pass
+            if 'media_content' in entry:
+                task = post_to_insta.delay(entry)
             deal = Deal(entry["id"], entry["title"], entry["summary"], entry["link"], datetime.fromtimestamp(mktime(entry["published_parsed"])))
             db.session.add(deal)
             db.session.commit()
