@@ -76,7 +76,7 @@ def decode(key, enc):
 
 
 @celery.task
-def post_to_insta(entry):
+def post_to_insta(entry, departure_city):
     # some long running task here
     username = 'flyfordeals'
     password = 'M136911m'
@@ -87,7 +87,7 @@ def post_to_insta(entry):
     with client(username, password, cookie_file=cookie_file) as cli:
         no_ratio_image_url = re.sub(pattern, replacement, entry['media_content'][0]['url'])
         try:
-            cli.upload(no_ratio_image_url, entry["title"], story=True)
+            # cli.upload(no_ratio_image_url, entry["title"], story=True)
             cli.upload(no_ratio_image_url, entry["title"] + ' #{0} #flycheap #cheapflights #flyfordeals #flycheap #flymoreforless #vacation'.format(departure_city.replace(" ", "")))
         except IOError:
             pass
@@ -179,7 +179,7 @@ def get_news():
     for entry in entries:
         if Deal.query.filter_by(guid= entry["id"]).count() < 1:
             if 'media_content' in entry:
-                task = post_to_insta.delay(entry)
+                task = post_to_insta.delay(entry, departure_city)
             deal = Deal(entry["id"], entry["title"], entry["summary"], entry["link"], datetime.fromtimestamp(mktime(entry["published_parsed"])))
             db.session.add(deal)
             db.session.commit()
