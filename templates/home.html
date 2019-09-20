@@ -57,7 +57,7 @@
     </nav>
 
     <main role="main" class="container">
-      <div class="d-flex align-items-center p-3 my-3 text-blakc-50 bg-white rounded box-shadow">
+      <div class="d-flex align-items-center p-3 my-3 text-black-50 bg-white rounded box-shadow">
         <img class="mr-3" src="{{ url_for('static',filename='assets/img/logo/logo_text.png') }}" alt="fly for deals logo" style="width: 100px;">
         <div class="lh-100">
           <h6 class="mb-0 text-black lh-100">We do not receive referral fees from booking sites. it's completely FREE! Our only incentive is to find you a good deal &#128522;</h6>
@@ -66,13 +66,14 @@
       </div>
 
       <div class="my-3 p-3 bg-white rounded box-shadow">
-        <h6 class="border-bottom border-gray pb-2 mb-0">Recent deals from {{departure_city}}</h6>
+        <h6 class="border-bottom border-gray pb-2 mb-0">Recent deals from <strong>{{departure_city}}</strong></h6>
         {% for article in articles %}
           <div class="media text-muted pt-3">
-			<div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+			<div class="media-body pb-1 mb-0 small lh-125 border-bottom border-gray">
 				<h5 class="d-block text-gray-dark">
 				  <a href="/detail/{{article.id | base64_encode}}" target="_blank">{{article.title}}</a>
 				</h5>
+				<i>{{article.published}}</i><br /></br>
 				<span class="d-block">{{article.description|remove_hrefs|safe}}</span>
 			</div>
           </div>
