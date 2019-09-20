@@ -21,7 +21,7 @@ import base64
 
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(Config)
 db = SQLAlchemy(app)
