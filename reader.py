@@ -111,7 +111,7 @@ def default():
 
 # @app.route("/scrape")
 def scrape(guid):
-    booking_websites = ["momondo","priceline","skyscanner","google.com/flights/","kiwi",'cheapoair','jetblue.com','southwest.com','alaskaair.com','expedia']
+    booking_websites = ["momondo","priceline","skyscanner","google.com/flights/","kiwi",'cheapoair','jetblue.com','southwest.com','alaskaair.com','expedia','kayak']
     # start_urls = [r.url for r in Deal.query.filter_by(parsed_url=None).order_by(desc(Deal.created_at)).limit(2)]
     response  = requests.get(guid)
     data = response.text

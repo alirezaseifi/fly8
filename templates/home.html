@@ -1,33 +1,115 @@
-<html>
-<head>
-	<title>Flight Deals</title>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YG6B9BWQLC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
 
-  gtag('config', 'G-YG6B9BWQLC');
-</script>
-</head>
-<body>
+    <title>Fly For Deals | Cheap Flights & Error Fares</title>
 
-	Departure City: <input type='text' placeholder="{{departure_city}}" id='from'>
-	 <button onclick="sendUrl();">Search</button>
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static',filename='dist/css/bootstrap.min.css') }}" rel="stylesheet">
 
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static',filename='offcanvas.css') }}" rel="stylesheet">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YG6B9BWQLC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-	<script>
-	    function sendUrl(){
-	        window.location.assign("?from="+document.getElementById("from").value);
-	    }
-	</script>
+      gtag('config', 'G-YG6B9BWQLC');
+    </script>
+  </head>
 
-	<h1>Flight Deals from {{departure_city}}</h1>
-	{% for article in articles %}
-	<b><a href="/detail/{{article.id | base64_encode}}">{{article.title}}</a></b><br />
-	<i>{{article.published}}</i><br />
-	{{article.description|remove_hrefs|safe}}
-	<hr />
-	{% endfor %}</body>
+  <body class="bg-light">
+
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+      <a class="navbar-brand" href="/">FLY FOR DEALS</a>
+      <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="?from=usa">USA<!-- <span class="sr-only">(current)</span> --></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="?from=europe">Europe</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Popular Cities</a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <a class="dropdown-item" href="?from=san%20francisco">San Francisco</a>
+              <a class="dropdown-item" href="?from=los%20angeles">Los angeles</a>
+              <a class="dropdown-item" href="?from=new%20yorks">New york</a>
+            </div>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" name="from" placeholder="Search your city" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+
+    <main role="main" class="container">
+      <div class="d-flex align-items-center p-3 my-3 text-blakc-50 bg-white rounded box-shadow">
+        <img class="mr-3" src="{{ url_for('static',filename='assets/img/logo/logo_text.png') }}" alt="fly for deals logo" style="width: 100px;">
+        <div class="lh-100">
+          <h6 class="mb-0 text-black lh-100">We have only one mission: to help you travel more for less</h6>
+          <small> We are a team of passionate travelers who provide details to the most incredible flight deals.
+
+We're not a travel agency!! We simply tell you when a cheap flight exists. No transactions are made with us therefore we do not issue any tickets.</small>
+        </div>
+      </div>
+
+      <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">Recent deals from {{departure_city}}</h6>
+        {% for article in articles %}
+          <div class="media text-muted pt-3">
+			<div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+				<h5 class="d-block text-gray-dark">
+				  <a href="/detail/{{article.id | base64_encode}}" target="_blank">{{article.title}}</a>
+				</h5>
+				<span class="d-block">{{article.description|remove_hrefs|safe}}</span>
+			</div>
+          </div>
+        {% endfor %}
+        <small class="d-block text-right mt-3">
+          <a href="https://www.instagram.com/flyfordeals" target="_blank">Follow us on Instagram</a>
+        </small>
+      </div>
+
+<!--       
+	<div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">Suggestions</h6>
+        <div class="media text-muted pt-3">
+          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <div class="d-flex justify-content-between align-items-center w-100">
+              <strong class="text-gray-dark">Full Name</strong>
+              <a href="#">Follow</a>
+            </div>
+            <span class="d-block">@username</span>
+          </div>
+        <small class="d-block text-right mt-3">
+          <a href="#">All suggestions</a>
+        </small>
+      </div> -->
+    </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="{{ url_for('static',filename='assets/js/vendor/jquery-slim.min.js') }}"><\/script>')</script>
+    <script src="{{ url_for('static',filename='assets/js/vendor/popper.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='assets/js/vendor/holder.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='offcanvas.js') }}"></script>
+  </body>
 </html>
