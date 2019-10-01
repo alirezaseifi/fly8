@@ -76,19 +76,18 @@ def decode(key, enc):
 
 
 @celery.task
-def post_to_insta(entry, departure_city):
+def post_to_insta(entry, image_url, departure_city):
     # some long running task here
     username = 'flyfordeals'
     password = 'M136911m'
     pattern = r'\-*(\d+)x(\d+)\.(.*)$'
     replacement = r'.\3'
-    print(entry)
     cookie_file = 'flyfordeals.json' # default: `USERNAME_ig.json`
     with client(username, password, cookie_file=cookie_file) as cli:
-        no_ratio_image_url = re.sub(pattern, replacement, entry['media_content'][0]['url'])
+        no_ratio_image_url = re.sub(pattern, replacement, image_url)
         try:
             # cli.upload(no_ratio_image_url, entry["title"], story=True)
-            cli.upload(no_ratio_image_url, entry["title"] + '. \n To purchase or see more deals visit the link in bio. \r\n  #{0} #flycheap #cheapflights #travelmore #flymoreforless #vacation #flyfordeals'.format(departure_city.replace(" ", "")))
+            cli.upload(no_ratio_image_url, entry["title"] + '. \n To purchase or see more deals visit the link in bio. \n  #{0} #flycheap #cheapflights #travelmore #flymoreforless #vacation #flyfordeals'.format(departure_city.replace(" ", "")))
         except IOError:
             pass
 
@@ -120,11 +119,26 @@ def scrape(guid):
     for link in soup.find_all('a'):
         if link.get('href') and any(booking_website in link.get('href') for booking_website in booking_websites):
             a_tag.append(str(link))
-            # detail = Detail(deal.id,link.get('href'), link.contents[0],link)
-            # db.session.add(detail)
-            # db.session.commit()
-            #print(link.get('href'))
     return a_tag
+
+
+@celery.task
+def scrape_image(entry, dt, departure_city):
+    deal = Deal(entry["id"], entry["title"], entry["summary"], entry["link"], datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S'))
+    db.session.add(deal)
+    if 'media_content' in entry:
+        post_to_insta.delay(entry,entry['media_content'][0]['url'], departure_city)
+    else:
+        response  = requests.get(entry["id"])
+        data = response.text
+        soup = BeautifulSoup(data)
+        main_image = soup.find("meta",  property="og:image", content=True)
+        main_image_url = main_image.get('content')
+        deal.parsed_url = '</br><center><img src="'+main_image_url+'"><center>'
+        post_to_insta.delay(entry,main_image_url, departure_city)
+    db.session.commit()
+    return 'ok'
+
 
 @app.route("/fetch")
 def lists ():
@@ -177,12 +191,13 @@ def get_news():
 
 
     for entry in entries:
-        if Deal.query.filter_by(guid= entry["id"]).count() < 1:
-            if 'media_content' in entry:
-                task = post_to_insta.delay(entry, departure_city)
-            deal = Deal(entry["id"], entry["title"], entry["summary"], entry["link"], datetime.fromtimestamp(mktime(entry["published_parsed"])))
-            db.session.add(deal)
-            db.session.commit()
+        db_deal = Deal.query.filter_by(guid= entry["id"])
+        if db_deal.count() < 1:
+            dt = datetime.fromtimestamp(mktime(entry["published_parsed"]))
+            print(dt)
+            scrape_image.delay(entry, dt, departure_city)
+        else:
+            entry['summary'] += "%s" %(db_deal.first().parsed_url)
     sorted_entries = sorted(entries,reverse=True, key=lambda entry: entry["published_parsed"])
     # print(sorted_entries) # for most recent entries firsts
 
