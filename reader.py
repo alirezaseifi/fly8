@@ -197,7 +197,8 @@ def get_news():
             print(dt)
             scrape_image.delay(entry, dt, departure_city)
         else:
-            entry['summary'] += "%s" %(db_deal.first().parsed_url)
+            if db_deal.first().parsed_url is not None:
+                entry['summary'] += "%s" %(db_deal.first().parsed_url)
     sorted_entries = sorted(entries,reverse=True, key=lambda entry: entry["published_parsed"])
     # print(sorted_entries) # for most recent entries firsts
 
