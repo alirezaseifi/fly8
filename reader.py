@@ -104,6 +104,7 @@ def remove_hrefs(text):
     return soup
 
 @app.route("/", methods=['GET', 'POST'])
+@app.route("/<from>", methods=['GET'])
 def default():
     return get_news()
 
@@ -168,7 +169,7 @@ def get_news():
     # pull down all feeds
     departure_city = request.args.get('from')
     if departure_city is None:
-        departure_city = 'san francisco'
+        departure_city = 'USA'
     future_calls = [Future(feedparser.parse,rss_url) for rss_url in rss_feeds(departure_city)]
     # block until they are all in
     feeds = [future_obj() for future_obj in future_calls]
