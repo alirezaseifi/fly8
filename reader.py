@@ -141,7 +141,7 @@ def scrape_image(entry, dt, departure_city):
 
 @app.route("/privacy-cookie-policy")
 def privacy_cookie_policy ():
-    return render_template("privacy_cookie_policy.html")
+    return render_template("privacy-cookie-policy.html")
 
 
 @app.route("/detail/<deal_id>")
