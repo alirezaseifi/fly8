@@ -77,14 +77,39 @@
       <div class="my-3 p-3 bg-white rounded box-shadow">
         <h6 class="border-bottom border-gray pb-2 mb-0">Recent deals from <strong>{{departure_city|upper}}</strong></h6>
         {% for article in articles %}
+        {% if loop.index % 8 == 0 %}
           <div class="media text-muted pt-3">
-			<div class="media-body pb-1 mb-0 small lh-125 border-bottom border-gray">
-				<h5 class="d-block text-gray-dark">
-				  <a href="/detail/{{article.id | base64_encode}}">{{article.title}}</a>
-				</h5>
-				<i>{{article.published}}</i><br /></br>
-				<span class="d-block">{{article.description|remove_hrefs|safe}}</span>
-			</div>
+            <div class="media-body pb-1 mb-0 small lh-125 border-bottom border-gray">
+              <a href="http://www.tkqlhce.com/click-9150737-13236145" target="_top">
+              <img src="http://www.awltovhc.com/image-9150737-13236145" width="480" height="60" alt="" border="0"/></a>
+            </div>
+          </div>
+        {% endif %}
+        {% if loop.index % 25 == 0 %}
+          <div class="media text-muted pt-3">
+            <div class="media-body pb-1 mb-0 small lh-125 border-bottom border-gray">
+              <a href="http://www.kqzyfj.com/click-9150737-13835719" target="_top">
+              <img src="http://www.awltovhc.com/image-9150737-13835719" width="728" height="90" alt="" border="0"/></a>
+            </div>
+          </div>
+        {% endif %}
+        {% if loop.index % 15 == 0 %}
+          <div class="media text-muted pt-3">
+            <div class="media-body pb-1 mb-0 small lh-125 border-bottom border-gray">
+              <a href="http://www.jdoqocy.com/click-9150737-13466037" target="_top">
+              <img src="http://www.lduhtrp.net/image-9150737-13466037" width="468" height="60" alt="" border="0"/></a>
+            </div>
+          </div>
+        {% endif %}
+
+          <div class="media text-muted pt-3">
+      			<div class="media-body pb-1 mb-0 small lh-125 border-bottom border-gray">
+      				<h5 class="d-block text-gray-dark">
+      				  <a href="/detail/{{article.id | base64_encode}}">{{article.title}} {{loop.index}}</a>
+      				</h5>
+      				<i>{{article.published}}</i><br /></br>
+      				<span class="d-block">{{article.description|remove_hrefs|safe}}</span>
+      			</div>
           </div>
         {% endfor %}
         <small class="d-block text-right mt-3">
