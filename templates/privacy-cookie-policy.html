@@ -75,15 +75,13 @@
       </div>
 
       <div class="my-3 p-3 bg-white rounded box-shadow">
-        <h6 class="border-bottom border-gray pb-2 mb-0">Recent deals from <strong>{{departure_city}}</strong></h6>
-        {% for article in articles %}
+        <h6 class="border-bottom border-gray pb-2 mb-0">Privacy and cookie policy</strong></h6>
           <div class="media text-muted pt-3">
 			<div class="media-body pb-1 mb-0 small lh-125 border-bottom border-gray">
-				<h5 class="d-block text-gray-dark">
-				  <a href="/detail/{{article.id | base64_encode}}">{{article.title}}</a>
-				</h5>
-				<i>{{article.published}}</i><br /></br>
-				<span class="d-block">{{article.description|remove_hrefs|safe}}</span>
+				<h6 class="d-block text-gray-dark">
+				  Your privacy is important to us and to inform you of how your privacy is protected, we provide this notice.
+				</h6>
+				<div class="single-page__content"><p>Your privacy is important to us and to inform you of how your privacy is protected, we provide this notice.</p><p><strong>The Information We Collect</strong></p><p>We may collect certain non-personally identifiable information when you visit many of our web pages such as the type of browser you are using (e.g., Opera, Mozilla, Internet Explorer), the type of operating system you are using, (e.g., Linux, Windows XP) and the domain name of your Internet service provider.</p><p>In some cases, we collect information regarding what pages within the site you look at, how long you look at them for and how many times you look at them.</p><p>If you choose to become a member of the site, your username, password and email address is retained by us. Subsequent to this, any comments, ratings or other contributions you make to the site are recorded and tied to this information.</p><p><strong>How We Use the Information</strong></p><p>We may use this information to determine how this website is being used, and to gauge popularity of different parts of the site.</p><p>To determine how many times specific sections of the site are viewed so we can calculate the popularity of different establishments and so on.</p><p>We may use this information to track abuse if it occurs.</p><p>We will disclose information we maintain when required to do so by law, for example, in response to a court order. We also may disclose such information in response to a law enforcement agency’s request.</p><p>Your personal information will NOT be shared with any other third party without your explicit permission.</p><p><strong>Cookies</strong></p><p>When you visit our websites we use cookies. Cookies allow us to identify the computer or device you’re using to access our websites – but we can’t identify you personally.</p><p>You can set up your web browser to refuse cookies, but this means you won’t be able to book on our website or use all of its features.</p><p>Deleting cookies does not mean you are permanently opted out of any advertising program. Unless you have settings that disallow cookies, the next time you visit a site running the advertisements, a new cookie will be added.</p><p>You can chose to disable or selectively turn off our cookies or third-party cookies in your browser settings, or by managing preferences in programs such as Norton Internet Security. However, this can affect how you are able to interact with our site as well as other websites. This could include the inability to login to services or programs, such as logging into forums or accounts.</p><p>What are cookies?<br>Cookies are small text files placed on your computer by us or our partners. They let us identify the device you’re using – but not you personally. This information is sent back to our systems as you move around our website.</p><p>Cookies are unique to the web browser you’re using – so if you’re using a desktop computer as well as a mobile, different data will be collected for each.</p></div>
 			</div>
           </div>
         {% endfor %}
@@ -91,33 +89,4 @@
           <a href="https://www.instagram.com/flyfordeals" target="_blank">if you end up booking these deals let us know on Instagram</a>
         </small>
       </div>
-
-<!--       
-	<div class="my-3 p-3 bg-white rounded box-shadow">
-        <h6 class="border-bottom border-gray pb-2 mb-0">Suggestions</h6>
-        <div class="media text-muted pt-3">
-          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <div class="d-flex justify-content-between align-items-center w-100">
-              <strong class="text-gray-dark">Full Name</strong>
-              <a href="#">Follow</a>
-            </div>
-            <span class="d-block">@username</span>
-          </div>
-        <small class="d-block text-right mt-3">
-          <a href="#">All suggestions</a>
-        </small>
-      </div> -->
-    </main>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="{{ url_for('static',filename='assets/js/vendor/jquery-slim.min.js') }}"><\/script>')</script>
-    <script src="{{ url_for('static',filename='assets/js/vendor/popper.min.js') }}"></script>
-    <script src="{{ url_for('static',filename='dist/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static',filename='assets/js/vendor/holder.min.js') }}"></script>
-    <script src="{{ url_for('static',filename='offcanvas.js') }}"></script>
-  </body>
 </html>

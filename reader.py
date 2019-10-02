@@ -139,21 +139,9 @@ def scrape_image(entry, dt, departure_city):
     db.session.commit()
     return 'ok'
 
-
-@app.route("/fetch")
-def lists ():
-    #Display the all Tasks
-    os.system("scrapy crawl booking_crawler > booking_urls.csv")
-    return 'ok'
-
-@app.route("/list")
-def deals ():
-    #Display the all Tasks
-    deals = Deal.query.order_by(Deal.pubdate.desc()).all()
-    # booking_urls = BookingLink.squery.order_by(BookingLink.created_at.desc()).all()
-    # for deal in deals:
-    #     print(deal)
-    return render_template("list.html", deals = deals)
+@app.route("/privacy-cookie-policy")
+def privacy_cookie_policy ():
+    return render_template("privacy_cookie_policy.html")
 
 
 @app.route("/detail/<deal_id>")
