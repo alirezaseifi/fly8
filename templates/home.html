@@ -105,7 +105,7 @@
           <div class="media text-muted pt-3">
       			<div class="media-body pb-1 mb-0 small lh-125 border-bottom border-gray">
       				<h5 class="d-block text-gray-dark">
-      				  <a href="/detail/{{article.id | base64_encode}}">{{article.title}} {{loop.index}}</a>
+      				  <a href="/detail/{{article.id | base64_encode}}">{{article.title}}</a>
       				</h5>
       				<i>{{article.published}}</i><br /></br>
       				<span class="d-block">{{article.description|remove_hrefs|safe}}</span>
