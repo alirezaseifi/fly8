@@ -104,7 +104,6 @@ def remove_hrefs(text):
     return soup
 
 @app.route("/", methods=['GET', 'POST'])
-@app.route("/<departure_city>", methods=['GET'])
 def default():
     return get_news()
 
