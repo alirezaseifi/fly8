@@ -37,7 +37,7 @@ instapy-cli==0.0.12
 itsdangerous==1.1.0
 Jinja2==2.10.1
 kombu==4.6.4
-lxml==4.3.3
+lxml==4.6.5
 Mako==1.0.8
 MarkupSafe==1.1.1
 more-itertools==7.2.0
